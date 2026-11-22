@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=SplitScreenP2P
+Comment=Off-Grid Peer-to-Peer Split-Screen Desktop Streamer & Anti-Screen-Peeking System
+Exec=splitscreen_p2p
+Icon=org.splitscreenp2p.SplitScreenP2P
+Terminal=false
+Type=Application
+Categories=Game;Network;Utility;
+Keywords=p2p;splitscreen;streaming;gamepad;wifi-direct;

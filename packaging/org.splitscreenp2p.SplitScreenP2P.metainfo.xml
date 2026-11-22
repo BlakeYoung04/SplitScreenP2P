@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.splitscreenp2p.SplitScreenP2P</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>SplitScreenP2P</name>
+  <summary>Off-grid peer-to-peer split-screen desktop streaming and controller forwarding</summary>
+  <description>
+    <p>
+      SplitScreenP2P enables multiplayer split-screen gaming on separate screens without an internet connection or external Wi-Fi router.
+      The host server only streams the specific viewport quadrant assigned to each player, preventing screen peeking and conserving bandwidth.
+    </p>
+  </description>
+  <launchable type="desktop-id">org.splitscreenp2p.SplitScreenP2P.desktop</launchable>
+  <provides>
+    <binary>splitscreen_p2p</binary>
+  </provides>
+</component>

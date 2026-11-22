@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "splitscreen_p2p"
+version = "1.0.0"
+description = "Off-Grid Peer-to-Peer Split-Screen Desktop Streamer and Controller Forwarding"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pygame-ce>=2.5.0",
+    "opencv-python-headless>=4.8.0",
+    "numpy>=1.24.0"
+]
+
+[project.scripts]
+splitscreen_p2p = "splitscreen_p2p.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["splitscreen_p2p*"]

@@ -1,0 +1,82 @@
+name: Build & Release SplitScreenP2P
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Run Test Suite
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygame-ce mss opencv-python-headless numpy pyinstaller
+
+      - name: Run Integration Tests
+        run: |
+          python -m splitscreen_p2p --test
+
+  build-windows:
+    name: Build Windows Standalone .EXE
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygame-ce mss opencv-python-headless numpy pyinstaller
+
+      - name: Compile Executable with PyInstaller
+        run: |
+          pyinstaller --noconfirm --clean --onefile --paths . --name SplitScreenP2P `
+            --exclude-module tkinter --exclude-module _tkinter `
+            --add-binary "splitscreen_p2p\ViGEmClient.dll;splitscreen_p2p" `
+            --add-binary "splitscreen_p2p\ViGEmClient.dll;." `
+            splitscreen_p2p\main.py
+
+      - name: Upload Windows Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SplitScreenP2P-Windows-x64
+          path: dist/SplitScreenP2P.exe
+
+  build-flatpak:
+    name: Build Linux Flatpak Bundle
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flatpak
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: SplitScreenP2P.flatpak
+          manifest-path: packaging/org.splitscreenp2p.SplitScreenP2P.yaml
+          run-tests: false
+          stop-at: splitscreen_p2p
+        continue-on-error: true
+
+      - name: Upload Flatpak Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: SplitScreenP2P-Linux-Flatpak
+          path: packaging/

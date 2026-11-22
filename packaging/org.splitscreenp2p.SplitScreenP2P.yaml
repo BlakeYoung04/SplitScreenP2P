@@ -1,0 +1,44 @@
+app-id: org.splitscreenp2p.SplitScreenP2P
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: splitscreen_p2p
+
+finish-args:
+  # Display & Audio
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  # Network: P2P UDP and TCP streaming
+  - --share=network
+  # Gamepad Hardware: access to /dev/input and /dev/uinput
+  - --device=all
+  - --filesystem=xdg-run/pipewire-0
+
+modules:
+  - name: python3-numpy
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} numpy
+
+  - name: python3-opencv-python-headless
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} opencv-python-headless
+
+  - name: python3-pygame-ce
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} pygame-ce
+
+  - name: splitscreen_p2p
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --no-deps --prefix=${FLATPAK_DEST} .
+      - install -Dm644 packaging/org.splitscreenp2p.SplitScreenP2P.desktop ${FLATPAK_DEST}/share/applications/org.splitscreenp2p.SplitScreenP2P.desktop
+      - install -Dm644 packaging/org.splitscreenp2p.SplitScreenP2P.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/org.splitscreenp2p.SplitScreenP2P.svg
+      - install -Dm644 packaging/org.splitscreenp2p.SplitScreenP2P.metainfo.xml ${FLATPAK_DEST}/share/metainfo/org.splitscreenp2p.SplitScreenP2P.metainfo.xml
+    sources:
+      - type: dir
+        path: ..
